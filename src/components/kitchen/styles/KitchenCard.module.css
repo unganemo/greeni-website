@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  width: 250px;
+  cursor: pointer;
+  padding: 2rem;
+  transition: 300ms;
+}
+
+.iconContainer {
+  background-color: transparent;
+  padding: 0.5rem;
+  transition: 300ms;
+  border-radius: 100%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.iconContainer:hover {
+  background-color: rgb(0, 0, 0, 0.05);
+}
+
+.iconContainer:hover .icon {
+  color: #678743;
+}
+
+.icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: 300ms;
+  color: grey;
+}
+
+.groceryInfoContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 1rem;
+}

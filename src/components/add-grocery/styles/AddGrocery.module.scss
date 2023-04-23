@@ -1,0 +1,88 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  background-color: #fff;
+  border-radius: 1rem;
+  border: 1px solid rgba($color: #333, $alpha: 0.1);
+  padding: 1rem;
+}
+
+.name_container {
+  width: 100%;
+  display: flex;
+  margin-bottom: 1rem;
+  input {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    border: 1px solid rgba($color: #333, $alpha: 0.1);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+}
+
+.date_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.date_row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  input {
+    padding: 0.5rem;
+    margin: 0.5rem 0 0.5rem 0;
+    border-radius: 1rem;
+    border: 1px solid rgba($color: #333, $alpha: 0.1);
+    font-size: 0.75rem;
+    font-weight: 400;
+  }
+  input:focus-visible {
+    border-color: #4eb536 !important;
+  }
+}
+
+.button_container {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  div {
+    width: 2rem;
+  }
+
+  button {
+    width: 100%;
+    transition: 300ms;
+    border-style: none;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    cursor: pointer;
+    p {
+      margin-right: 0.5rem;
+    }
+  }
+  .main {
+    background-color: #4eb536;
+    color: white;
+  }
+  .main:hover {
+    background-color: #60c949;
+  }
+
+  .secondary {
+    background-color: #e7f4e4;
+    color: #333;
+  }
+  .secondary:hover {
+    background-color: rgb(237, 245, 234);
+  }
+}

@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  transition: 300ms;
+  font-size: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 1rem;
+  color: #333;
+  width: inherit;
+  padding: 0.5rem;
+}
+
+.title {
+  margin-left: 1rem;
+  text-decoration: none;
+}
+
+.container:hover {
+  background-color: #fcfffa;
+}
