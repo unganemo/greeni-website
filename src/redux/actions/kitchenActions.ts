@@ -1,38 +1,5 @@
-import { ThunkAction } from "redux-thunk";
-import { RootState } from "../store/store";
-import {
-  getKitchensStart,
-  getKitchensSuccess,
-  getKitchensFailure,
-} from "../reducers/kitchensReducer";
-import useApi from "../../hooks/useApi";
-const token = "";
+const token =
+	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMzkwYWMxYmMtYWNjNS00ODE5LThkMjAtYTZmN2Y0M2M3NWU3IiwiZW1haWwiOiIkMmIkMTAkcEFFbDVjZHNjQ0N5MzdFZEt3bVh2ZVQ4ZGx0cFNxeHR6TFMuWVYzWTVOM01qcHV6eFBXRkciLCJmaXJzdG5hbWUiOiJBbGV4YW5kcm9zIiwibGFzdE5hbWUiOiJLYXJha2l0c29zIiwiaWF0IjoxNjgyMjY1MzU2LCJleHAiOjE2ODIzNTE3NTZ9.XkbY3rvKs7q_kbFQlV7LbMR5Ic28BhvvEK1cDZgw_o4";
 const user_id = "3029a1bf-b6fe-40e7-bc1f-46714f625725";
 
 // Define thunk action to fetch todos
-export const fetchKitchens = (): ThunkAction<
-  void,
-  RootState,
-  null,
-  ReturnType<typeof getKitchensSuccess | typeof getKitchensFailure>
-> => {
-  const [api, isLoading, error] = useApi<Kitchen[]>();
-  return async (dispatch) => {
-    try {
-      const kitchens = await api(
-        `http://localhost:3000/api/kitchen/get/${user_id}`,
-        "GET",
-        token
-      );
-      if (kitchens === undefined || kitchens.length === 0 || !kitchens[0])
-        return;
-      dispatch(getKitchensSuccess(kitchens));
-    } catch (error) {
-      if (error instanceof Error) {
-        dispatch(getKitchensFailure(error.message));
-      } else {
-        dispatch(getKitchensFailure("An unknown error occurred."));
-      }
-    }
-  };
-};
