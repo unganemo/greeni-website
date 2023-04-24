@@ -8,3 +8,19 @@ interface Grocery {
 interface Groceries extends Array<Grocery> {
   groceries: Grocery[];
 }
+
+interface PureGrocery {
+  name: string;
+  id: string;
+  days: number;
+}
+
+interface PureGroceries {
+  groceries: PureGrocery[];
+}
+
+interface GroceryState {
+  groceries: PureGrocery[];
+  loading: boolean;
+  error: string | null;
+}

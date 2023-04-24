@@ -3,11 +3,13 @@ import thunkMiddleware from "redux-thunk";
 
 // Reducers
 import kitchensReducer from "../reducers/kitchensReducer";
+import groceryReducer from "../reducers/groceryReducer";
 
 // Create store
 const store = configureStore({
   reducer: {
     kitchens: kitchensReducer,
+    grocery: groceryReducer,
   },
   middleware: [thunkMiddleware],
 });

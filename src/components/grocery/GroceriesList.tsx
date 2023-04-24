@@ -6,9 +6,18 @@ import { MdSort } from "react-icons/md";
 interface GroceryListProps {
   groceries: Groceries;
   type: number;
+  kitchen_id: string;
+  token: string;
+  user_id: string | undefined;
 }
 
-const GroceriesList = ({ groceries, type }: GroceryListProps) => {
+const GroceriesList = ({
+  groceries,
+  type,
+  kitchen_id,
+  token,
+  user_id,
+}: GroceryListProps) => {
   const expiryType = useMemo(() => {
     switch (type) {
       case 0:
@@ -33,7 +42,10 @@ const GroceriesList = ({ groceries, type }: GroceryListProps) => {
           <GroceryCard
             key={grocery.id}
             grocery={grocery}
+            kitchen_id={kitchen_id}
             color={type === 0 ? "#F6C443" : type === 1 ? "#4EB536" : "#F06565"}
+            token={token}
+            user_id={user_id}
           />
         ))}
       </div>

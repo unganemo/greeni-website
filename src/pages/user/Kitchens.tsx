@@ -10,165 +10,207 @@ import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "@reduxjs/toolkit";
 import {
-	getKitchensFailure,
-	getKitchensStart,
-	getKitchensSuccess,
+  getKitchensFailure,
+  getKitchensStart,
+  getKitchensSuccess,
 } from "../../redux/reducers/kitchensReducer";
 import useApi from "../../hooks/useApi";
+import {
+  getGroceryFailure,
+  getGroceryStart,
+  getGrocerySuccess,
+} from "../../redux/reducers/groceryReducer";
 
 const Kitchens = ({}) => {
-	//user_id and temp token
-	const { user_id } = useParams();
-	//Refs
-	const buttonRef = useRef<HTMLButtonElement>(null);
-	const dispatch = useDispatch<ThunkDispatch<RootState, null, AnyAction>>();
-	const token =
-		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMzkwYWMxYmMtYWNjNS00ODE5LThkMjAtYTZmN2Y0M2M3NWU3IiwiZW1haWwiOiIkMmIkMTAkcEFFbDVjZHNjQ0N5MzdFZEt3bVh2ZVQ4ZGx0cFNxeHR6TFMuWVYzWTVOM01qcHV6eFBXRkciLCJmaXJzdG5hbWUiOiJBbGV4YW5kcm9zIiwibGFzdE5hbWUiOiJLYXJha2l0c29zIiwiaWF0IjoxNjgyMjY1MzU2LCJleHAiOjE2ODIzNTE3NTZ9.XkbY3rvKs7q_kbFQlV7LbMR5Ic28BhvvEK1cDZgw_o4";
-	//States
-	const [open, setOpen] = useState(false);
-	const [selKitchen, setSelKitchen] = useState<Kitchen>();
-	const kitchens = useSelector((state: RootState) => state.kitchens.kitchens);
-	const [api, isLoading, error] = useApi<Kitchen[]>();
+  //user_id and temp token
+  const { user_id } = useParams();
+  //Refs
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const dispatch = useDispatch<ThunkDispatch<RootState, null, AnyAction>>();
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMzkwYWMxYmMtYWNjNS00ODE5LThkMjAtYTZmN2Y0M2M3NWU3IiwiZW1haWwiOiIkMmIkMTAkcEFFbDVjZHNjQ0N5MzdFZEt3bVh2ZVQ4ZGx0cFNxeHR6TFMuWVYzWTVOM01qcHV6eFBXRkciLCJmaXJzdG5hbWUiOiJBbGV4YW5kcm9zIiwibGFzdE5hbWUiOiJLYXJha2l0c29zIiwiaWF0IjoxNjgyMjY1MzU2LCJleHAiOjE2ODIzNTE3NTZ9.XkbY3rvKs7q_kbFQlV7LbMR5Ic28BhvvEK1cDZgw_o4";
+  //States
+  const [open, setOpen] = useState(false);
+  const [selKitchen, setSelKitchen] = useState<Kitchen>();
+  const kitchens = useSelector((state: RootState) => state.kitchens.kitchens);
+  const groceries = useSelector((state: RootState) => state.grocery.groceries);
+  const [kitchenApi, isLoading, error] = useApi<Kitchen[]>();
+  const [groceryApi] = useApi<PureGroceries>();
 
-	//Functions
-	const getModalPosition = (): React.CSSProperties => {
-		if (!buttonRef.current) {
-			return {};
-		}
+  //Functions
+  const getModalPosition = (): React.CSSProperties => {
+    if (!buttonRef.current) {
+      return {};
+    }
 
-		const buttonRect = buttonRef.current.getBoundingClientRect();
-		const modalWidth = 350; // change this to the width of your modal
-		const left = buttonRect.right - modalWidth;
-		const top = buttonRect.top + buttonRect.height + 8;
+    const buttonRect = buttonRef.current.getBoundingClientRect();
+    const modalWidth = 350; // change this to the width of your modal
+    const left = buttonRect.right - modalWidth;
+    const top = buttonRect.top + buttonRect.height + 8;
 
-		return {
-			position: "absolute",
-			top,
-			left,
-		};
-	};
+    return {
+      position: "absolute",
+      top,
+      left,
+    };
+  };
 
-	useEffect(() => {
-		async function fetchKitchens() {
-			dispatch(getKitchensStart());
+  useEffect(() => {
+    async function fetchKitchens() {
+      dispatch(getKitchensStart());
 
-			try {
-				const kitchensData = await api(
-					`http://localhost:3000/api/kitchen/get/${user_id}`,
-					"GET",
-					token
-				);
-				if (
-					kitchensData === undefined ||
-					kitchensData.length === 0 ||
-					!kitchensData[0]
-				)
-					return;
+      try {
+        const kitchensData = await kitchenApi(
+          `http://localhost:3000/api/kitchen/get/${user_id}`,
+          "GET",
+          token
+        );
+        if (
+          kitchensData === undefined ||
+          kitchensData.length === 0 ||
+          !kitchensData[0]
+        )
+          return;
 
-				if (kitchensData !== kitchens)
-					dispatch(getKitchensSuccess(kitchensData));
-			} catch (error) {
-				if (error instanceof Error) {
-					dispatch(getKitchensFailure(error.message));
-				} else {
-					dispatch(getKitchensFailure("An unknown error occurred."));
-				}
-			}
-		}
+        if (kitchensData !== kitchens)
+          dispatch(getKitchensSuccess(kitchensData));
+      } catch (error) {
+        if (error instanceof Error) {
+          dispatch(getKitchensFailure(error.message));
+        } else {
+          dispatch(getKitchensFailure("An unknown error occurred."));
+        }
+      }
+    }
 
-		fetchKitchens();
-	}, [dispatch]);
+    async function fetchAllGroceries() {
+      dispatch(getGroceryStart());
+      try {
+        const data = await groceryApi(
+          `http://localhost:3000/api/grocery`,
+          "GET",
+          token
+        );
 
-	//useEffect
-	useEffect(() => {
-		const initialKitchen = () => {
-			if (!kitchens || kitchens.length === 0 || !kitchens[0]) return;
-			setSelKitchen(kitchens[0]);
-		};
-		initialKitchen();
-		console.log(kitchens);
-	}, [kitchens]);
+        if (
+          data === undefined ||
+          data.groceries.length === 0 ||
+          !data.groceries[0]
+        )
+          return;
 
-	const toggleOpen = (value: boolean) => {
-		setOpen(value);
-	};
+        if (data.groceries !== groceries)
+          dispatch(getGrocerySuccess(data.groceries));
+      } catch (error) {
+        if (error instanceof Error) {
+          dispatch(getGroceryFailure(error.message));
+        } else {
+          dispatch(getGroceryFailure("An unknown error occurred."));
+        }
+      }
+    }
 
-	if (isLoading && !kitchens) {
-		return <div>Loading...</div>;
-	}
+    fetchAllGroceries();
+    fetchKitchens();
+  }, [dispatch]);
 
-	if (error) {
-		return <div>An error occurred: {error}</div>;
-	}
+  //useEffect
+  useEffect(() => {
+    const initialKitchen = () => {
+      if (!kitchens || kitchens.length === 0 || !kitchens[0]) return;
+      setSelKitchen(kitchens[0]);
+    };
+    initialKitchen();
+  }, [kitchens, groceries]);
 
-	return (
-		<div className={styles.container}>
-			<div className={styles.top_container}>
-				<div className={styles.header_row}>
-					<h1>Kitchens</h1>
-				</div>
-				<div className={styles.kitchen_row}>
-					{kitchens?.map((kitchen) => {
-						return (
-							<button
-								onClick={() => setSelKitchen(kitchen)}
-								key={kitchen.kitchen_id}
-								style={
-									selKitchen === kitchen
-										? {
-												backgroundColor: "#4eb536",
-												color: "#fff",
-										  }
-										: {
-												backgroundColor: "#e7f4e4",
-												color: "#333",
-										  }
-								}
-							>
-								{kitchen.kitchen_name}
-							</button>
-						);
-					})}
-				</div>
-				<div className={styles.info_row}>
-					<div className={styles.kitchen_info_container}>
-						<h2>Groceries</h2>
-					</div>
-					<div className={styles.kitchen_button_container}>
-						<button
-							className={styles.main}
-							ref={buttonRef}
-							onClick={() => toggleOpen(!open)}
-						>
-							<p>Add grocery</p>
-							<IoMdAddCircleOutline size="1rem" />
-						</button>
-						{open && (
-							<div style={getModalPosition()}>
-								<AddGrocery
-									close={toggleOpen}
-									kitchen_id={selKitchen?.kitchen_id}
-									token={token}
-								/>
-							</div>
-						)}
+  const toggleOpen = (value: boolean) => {
+    setOpen(value);
+  };
 
-						<button className={styles.secondary}>
-							<p>Invite user</p>
-							<RiUserAddLine size="1rem" color="#4eb536" />
-						</button>
-					</div>
-				</div>
-			</div>
-			<div className={styles.grocery_container}>
-				{selKitchen?.groceries.map((items, i) => (
-					<div className={styles.grocery_list_container} key={i}>
-						<GroceriesList groceries={items} type={i} />
-					</div>
-				))}
-			</div>
-		</div>
-	);
+  if (isLoading && !kitchens) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>An error occurred: {error}</div>;
+  }
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.top_container}>
+        <div className={styles.header_row}>
+          <h1>Kitchens</h1>
+        </div>
+        <div className={styles.kitchen_row}>
+          {kitchens?.map((kitchen) => {
+            return (
+              <button
+                onClick={() => setSelKitchen(kitchen)}
+                key={kitchen.kitchen_id}
+                style={
+                  selKitchen === kitchen
+                    ? {
+                        backgroundColor: "#4eb536",
+                        color: "#fff",
+                      }
+                    : {
+                        backgroundColor: "#e7f4e4",
+                        color: "#333",
+                      }
+                }
+              >
+                {kitchen.kitchen_name}
+              </button>
+            );
+          })}
+        </div>
+        <div className={styles.info_row}>
+          <div className={styles.kitchen_info_container}>
+            <h2>Groceries</h2>
+          </div>
+          <div className={styles.kitchen_button_container}>
+            <button
+              className={styles.main}
+              ref={buttonRef}
+              onClick={() => toggleOpen(!open)}
+            >
+              <p>Add grocery</p>
+              <IoMdAddCircleOutline size="1rem" />
+            </button>
+            {open && (
+              <div style={getModalPosition()}>
+                <AddGrocery
+                  close={toggleOpen}
+                  kitchen_id={selKitchen?.kitchen_id}
+                  token={token}
+                  user_id={user_id}
+                  groceries={groceries}
+                />
+              </div>
+            )}
+
+            <button className={styles.secondary}>
+              <p>Invite user</p>
+              <RiUserAddLine size="1rem" color="#4eb536" />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className={styles.grocery_container}>
+        {selKitchen?.groceries.map((items, i) => (
+          <div className={styles.grocery_list_container} key={i}>
+            <GroceriesList
+              groceries={items}
+              type={i}
+              kitchen_id={selKitchen.kitchen_id}
+              token={token}
+              user_id={user_id}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default Kitchens;
