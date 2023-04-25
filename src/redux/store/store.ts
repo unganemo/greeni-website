@@ -7,11 +7,11 @@ import groceryReducer from "../reducers/groceryReducer";
 
 // Create store
 const store = configureStore({
-  reducer: {
-    kitchens: kitchensReducer,
-    grocery: groceryReducer,
-  },
-  middleware: [thunkMiddleware],
+	reducer: {
+		kitchens: kitchensReducer,
+		groceries: groceryReducer,
+	},
+	middleware: [thunkMiddleware],
 });
 
 export type RootState = ReturnType<typeof store.getState>;

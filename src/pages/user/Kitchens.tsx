@@ -20,20 +20,25 @@ import {
 	getGroceryStart,
 	getGrocerySuccess,
 } from "../../redux/reducers/groceryReducer";
+import { tokenImport } from "../../token";
 
 const Kitchens = ({}) => {
 	//user_id and temp token
 	const { user_id } = useParams();
+
 	//Refs
 	const buttonRef = useRef<HTMLButtonElement>(null);
 	const dispatch = useDispatch<ThunkDispatch<RootState, null, AnyAction>>();
-	const token =
-		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMzkwYWMxYmMtYWNjNS00ODE5LThkMjAtYTZmN2Y0M2M3NWU3IiwiZW1haWwiOiIkMmIkMTAkcEFFbDVjZHNjQ0N5MzdFZEt3bVh2ZVQ4ZGx0cFNxeHR6TFMuWVYzWTVOM01qcHV6eFBXRkciLCJmaXJzdG5hbWUiOiJBbGV4YW5kcm9zIiwibGFzdE5hbWUiOiJLYXJha2l0c29zIiwiaWF0IjoxNjgyMzE0NDk2LCJleHAiOjE2ODI0MDA4OTZ9.MK3uwp4zod_ZnpE2LdelyH4qrdglQX0sc9HO0iCFqDc"; //States
+
+	//Temp
+	const token = tokenImport;
+
+	//States
 	const [open, setOpen] = useState(false);
-	const [selKitchen, setSelKitchen] = useState<Kitchen>();
+	const [kitchenIndex, setKitchenIndex] = useState<number>(0);
 	const kitchens = useSelector((state: RootState) => state.kitchens.kitchens);
 	const groceries = useSelector(
-		(state: RootState) => state.grocery.groceries
+		(state: RootState) => state.groceries.groceries
 	);
 	const [kitchenApi, isLoading, error] = useApi<Kitchen[]>();
 	const [groceryApi] = useApi<PureGroceries>();
@@ -72,7 +77,7 @@ const Kitchens = ({}) => {
 					!kitchensData[0]
 				)
 					return;
-				setSelKitchen(kitchensData[0]);
+				setKitchenIndex(0);
 
 				if (kitchensData !== kitchens)
 					dispatch(getKitchensSuccess(kitchensData));
@@ -112,8 +117,9 @@ const Kitchens = ({}) => {
 			}
 		}
 
-		fetchAllGroceries();
-		fetchKitchens();
+		if (groceries === undefined || groceries.length === 0)
+			fetchAllGroceries();
+		if (kitchens === undefined || kitchens.length === 0) fetchKitchens();
 	}, [dispatch]);
 
 	const toggleOpen = (value: boolean) => {
@@ -128,6 +134,10 @@ const Kitchens = ({}) => {
 		return <div>An error occurred: {error}</div>;
 	}
 
+	if (kitchenIndex === undefined) {
+		return <div>Loading...</div>;
+	}
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.top_container}>
@@ -135,13 +145,13 @@ const Kitchens = ({}) => {
 					<h1>Kitchens</h1>
 				</div>
 				<div className={styles.kitchen_row}>
-					{kitchens?.map((kitchen) => {
+					{kitchens?.map((kitchen, i) => {
 						return (
 							<button
-								onClick={() => setSelKitchen(kitchen)}
+								onClick={() => setKitchenIndex(i)}
 								key={kitchen.kitchen_id}
 								style={
-									selKitchen?.kitchen_id ===
+									kitchens[kitchenIndex]?.kitchen_id ===
 									kitchen.kitchen_id
 										? {
 												backgroundColor: "#4eb536",
@@ -175,7 +185,9 @@ const Kitchens = ({}) => {
 							<div style={getModalPosition()}>
 								<AddGrocery
 									close={toggleOpen}
-									kitchen_id={selKitchen?.kitchen_id}
+									kitchen_id={
+										kitchens[kitchenIndex].kitchen_id
+									}
 									token={token}
 									user_id={user_id}
 									groceries={groceries}
@@ -191,13 +203,20 @@ const Kitchens = ({}) => {
 				</div>
 			</div>
 			<div className={styles.grocery_container}>
-				{selKitchen?.groceries.map((items, i) => (
+				{kitchens[kitchenIndex].groceries.map((items, i) => (
 					<div className={styles.grocery_list_container} key={i}>
 						<GroceriesList
 							groceries={items}
 							type={i}
-							kitchen_id={selKitchen.kitchen_id}
+							kitchen_id={kitchens[kitchenIndex].kitchen_id}
 							token={token}
+							title={
+								i === 0
+									? "Expiring soon"
+									: i === 1
+									? "Not expired"
+									: "Expired"
+							}
 							user_id={user_id}
 						/>
 					</div>

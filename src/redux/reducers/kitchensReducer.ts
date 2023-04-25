@@ -35,21 +35,59 @@ const kitchenSlice = createSlice({
 				expiryType: number;
 			}>
 		) {
-			const mutateArray: Kitchen[] = state.kitchens;
+			const mutateArray: Kitchen[] = [...state.kitchens];
 			const { kitchenId, grocery, expiryType } = action.payload;
+			console.log(grocery);
 			const kitchenIndex = mutateArray.findIndex(
 				(kitchen) => kitchen.kitchen_id === kitchenId
 			);
 			if (kitchenIndex !== -1) {
 				mutateArray[kitchenIndex].groceries[expiryType].push(grocery);
 			}
-			console.log(state.kitchens[kitchenIndex].groceries[expiryType]);
 			state.kitchens = mutateArray;
+			state.loading = false;
+			state.error = null;
 		},
 		postGroceryFailure(state, action: PayloadAction<string>) {
 			state.loading = false;
 			state.error = action.payload;
 			console.log(state.error);
+		},
+		deleteGroceryStart(state) {
+			state.loading = true;
+			state.error = null;
+		},
+		deleteGrocerySuccess(
+			state,
+			action: PayloadAction<{
+				groceryId: string;
+				kitchenId: string;
+				expiryType: number;
+			}>
+		) {
+			const copy: Kitchen[] = [...state.kitchens];
+			const { groceryId, kitchenId, expiryType } = action.payload;
+			const index = copy.findIndex(
+				(kitchen) => kitchen.kitchen_id === kitchenId
+			);
+			if (index !== -1) {
+				const groceryIndex = copy[index].groceries[
+					expiryType
+				].findIndex((grocery) => grocery.id === groceryId);
+				if (groceryIndex !== -1) {
+					copy[index].groceries[expiryType].splice(groceryIndex, 1);
+					state.kitchens = copy;
+					console.log(state.kitchens);
+					console.log(copy);
+				}
+			}
+			state.loading = false;
+			state.error = null;
+		},
+		deleteGroceryFailure(state, action: PayloadAction<string>) {
+			console.log(action.payload);
+			state.loading = false;
+			state.error = action.payload;
 		},
 		// Add more reducers here for adding, updating, and deleting Kitchens
 	},
@@ -62,6 +100,9 @@ export const {
 	postGroceryFailure,
 	postGroceryStart,
 	postGrocerySuccess,
+	deleteGroceryFailure,
+	deleteGrocerySuccess,
+	deleteGroceryStart,
 } = kitchenSlice.actions;
 
 export default kitchenSlice.reducer;

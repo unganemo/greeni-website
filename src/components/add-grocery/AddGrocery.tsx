@@ -87,7 +87,7 @@ const AddGrocery = ({
 			} else {
 				expiryType = 1;
 			}
-
+			console.log(response);
 			dispatch(
 				postGrocerySuccess({
 					kitchenId: kitchen_id,
@@ -100,6 +100,7 @@ const AddGrocery = ({
 					expiryType: expiryType,
 				})
 			);
+			handleCancel();
 		} catch (error) {
 			if (error instanceof Error)
 				dispatch(postGroceryFailure(error.message));
