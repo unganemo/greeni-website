@@ -11,16 +11,16 @@ const NavbarListItem = ({ icon, title, route }: NavbarListItemProps) => {
 
 	switch (icon) {
 		case "kitchens":
-			selectedIcon = <MdKitchen />;
+			selectedIcon = <MdKitchen className={styles.icon} />;
 			break;
 		case "shopping-lists":
-			selectedIcon = <IoMdListBox />;
+			selectedIcon = <IoMdListBox className={styles.icon} />;
 			break;
 		case "recipes":
-			selectedIcon = <FaUtensils />;
+			selectedIcon = <FaUtensils className={styles.icon} />;
 			break;
 		case "add-groceries":
-			selectedIcon = <FaCartPlus />;
+			selectedIcon = <FaCartPlus className={styles.icon} />;
 			break;
 		default:
 			selectedIcon = null;

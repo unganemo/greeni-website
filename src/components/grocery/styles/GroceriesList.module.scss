@@ -1,27 +1,42 @@
 .container {
-  margin: 0 2rem 0 2rem;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+	margin: 0 2rem 0 2rem;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
 }
 
 .info_row {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  h2 {
-    margin-right: 1rem;
-    font-size: 1rem;
-  }
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	width: 100%;
+	h2 {
+		margin-right: 1rem;
+		font-size: 1.25rem;
+		font-weight: 400;
+	}
 }
 
 .grocery_list {
-  margin: 1rem 0 4rem 0;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
+	margin: 1rem 0 4rem 0;
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	.no_grocery_text {
+		margin-left: 1rem;
+		font-weight: 300;
+		font-size: 1rem;
+		color: rgba($color: #333, $alpha: 0.5);
+	}
+}
+
+@media (max-width: 800px) {
+	.container {
+		margin: 0;
+		margin-left: 1rem;
+		margin-right: 1rem;
+	}
 }

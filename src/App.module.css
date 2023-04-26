@@ -1,14 +1,14 @@
 .App {
-  display: flex;
-  flex-direction: row;
+	display: flex;
+	flex-direction: row;
 }
 
-@media (max-width: 768px) {
-  .App {
-    flex-direction: column;
-  }
+@media (max-width: 800px) {
+	.App {
+		flex-direction: column;
+	}
 }
 
 .content {
-  flex: 1;
+	flex: 1;
 }

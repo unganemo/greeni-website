@@ -106,8 +106,7 @@ const Kitchens = ({}) => {
 				)
 					return;
 
-				if (data.groceries !== groceries)
-					dispatch(getGrocerySuccess(data.groceries));
+				dispatch(getGrocerySuccess(data.groceries));
 			} catch (error) {
 				if (error instanceof Error) {
 					dispatch(getGroceryFailure(error.message));
@@ -117,8 +116,7 @@ const Kitchens = ({}) => {
 			}
 		}
 
-		if (groceries === undefined || groceries.length === 0)
-			fetchAllGroceries();
+		fetchAllGroceries();
 		if (kitchens === undefined || kitchens.length === 0) fetchKitchens();
 	}, [dispatch]);
 
@@ -130,8 +128,16 @@ const Kitchens = ({}) => {
 		return <div>Loading...</div>;
 	}
 
+	if (groceries === undefined) {
+		return <div>Loading...</div>;
+	}
+
 	if (error) {
 		return <div>An error occurred: {error}</div>;
+	}
+
+	if (kitchens[kitchenIndex] === undefined) {
+		return <div>Loading...</div>;
 	}
 
 	if (kitchenIndex === undefined) {
@@ -140,6 +146,17 @@ const Kitchens = ({}) => {
 
 	return (
 		<div className={styles.container}>
+			{open && (
+				<div>
+					<AddGrocery
+						close={toggleOpen}
+						kitchen_id={kitchens[kitchenIndex].kitchen_id}
+						token={token}
+						user_id={user_id}
+						groceries={groceries}
+					/>
+				</div>
+			)}
 			<div className={styles.top_container}>
 				<div className={styles.header_row}>
 					<h1>Kitchens</h1>
@@ -178,26 +195,17 @@ const Kitchens = ({}) => {
 							ref={buttonRef}
 							onClick={() => toggleOpen(!open)}
 						>
-							<p>Add grocery</p>
-							<IoMdAddCircleOutline size="1rem" />
+							<IoMdAddCircleOutline
+								size="1.5rem"
+								className={styles.icon}
+							/>
 						</button>
-						{open && (
-							<div style={getModalPosition()}>
-								<AddGrocery
-									close={toggleOpen}
-									kitchen_id={
-										kitchens[kitchenIndex].kitchen_id
-									}
-									token={token}
-									user_id={user_id}
-									groceries={groceries}
-								/>
-							</div>
-						)}
-
 						<button className={styles.secondary}>
-							<p>Invite user</p>
-							<RiUserAddLine size="1rem" color="#4eb536" />
+							<RiUserAddLine
+								size="1.5rem"
+								color="#4eb536"
+								className={styles.icon}
+							/>
 						</button>
 					</div>
 				</div>

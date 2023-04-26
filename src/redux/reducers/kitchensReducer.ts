@@ -60,20 +60,20 @@ const kitchenSlice = createSlice({
 		deleteGrocerySuccess(
 			state,
 			action: PayloadAction<{
-				groceryId: string;
+				has_id: string;
 				kitchenId: string;
 				expiryType: number;
 			}>
 		) {
 			const copy: Kitchen[] = [...state.kitchens];
-			const { groceryId, kitchenId, expiryType } = action.payload;
+			const { has_id, kitchenId, expiryType } = action.payload;
 			const index = copy.findIndex(
 				(kitchen) => kitchen.kitchen_id === kitchenId
 			);
 			if (index !== -1) {
 				const groceryIndex = copy[index].groceries[
 					expiryType
-				].findIndex((grocery) => grocery.id === groceryId);
+				].findIndex((grocery) => grocery.has_id === has_id);
 				if (groceryIndex !== -1) {
 					copy[index].groceries[expiryType].splice(groceryIndex, 1);
 					state.kitchens = copy;

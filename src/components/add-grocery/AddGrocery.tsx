@@ -27,6 +27,7 @@ interface AddGroceryResponse {
 	purchased: string;
 	name: string;
 	id: string;
+	has_id: string;
 }
 
 const AddGrocery = ({
@@ -96,6 +97,7 @@ const AddGrocery = ({
 						name: response.name,
 						expires: response.expires,
 						purchased: response.purchased,
+						has_id: response.has_id,
 					},
 					expiryType: expiryType,
 				})
